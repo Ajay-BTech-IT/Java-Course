@@ -12,6 +12,8 @@ function App() {
     college: ''
   });
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,17 +62,28 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage('');
+    setSuccess(false);
+
     try {
-      await fetch('https://java-course.onrender.com/enroll', {
+      const response = await fetch('https://java-course.onrender.com/enroll ', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      setMessage('Thank you! We will contact you soon.');
-      setFormData({ name: '', email: '', phone: '', degree: '', department: '', college: '' });
-      setTimeout(() => setShowForm(false), 2000);
+
+      if (response.ok) {
+        setSuccess(true);
+        setFormData({ name: '', email: '', phone: '', degree: '', department: '', college: '' });
+        setMessage('Thank you! You are successfully enrolled.');
+      } else {
+        setMessage('Failed to submit. Please try again.');
+      }
     } catch (err) {
-      setMessage('Failed to submit form. Please try again later.');
+      setMessage('Network error. Please check your connection.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -219,9 +232,30 @@ function App() {
               <input type="text" name="department" placeholder="Department" value={formData.department} onChange={handleChange} />
               <input type="text" name="college" placeholder="College" value={formData.college} onChange={handleChange} />
 
-              <button type="submit">Submit</button>
-              {message && <p className="form-message">{message}</p>}
+              <button type="submit" disabled={loading}>
+                {loading ? (
+                  <span className="spinner"></span>
+                ) : success ? (
+                  "Submitted!"
+                ) : (
+                  "Submit"
+                )}
+              </button>
+              {message && <p className={`form-message ${success ? 'success' : ''}`}>{message}</p>}
             </form>
+          </div>
+        </div>
+      )}
+
+     {/* Full Page Success Screen */}
+      {success && (
+        <div className="success-fullscreen">
+          <div className="success-content">
+            <div className="checkmark-circle">
+              <span className="checkmark">&#10003;</span>
+            </div>
+            <h2>Successfully Enrolled!</h2>
+            <p>We'll contact you soon 😊</p>
           </div>
         </div>
       )}
