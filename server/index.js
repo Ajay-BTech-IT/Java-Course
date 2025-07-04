@@ -5,7 +5,10 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 const app = express();
 
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: "https://java-course-frontend.onrender.com " // Or use "*" for testing
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
