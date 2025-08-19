@@ -7,7 +7,7 @@ const app = express();
 
 // app.use(cors());
 app.use(cors({
-  origin: "https://java-course-frontend.onrender.com " // Or use "*" for testing
+  origin: "https://java-course-frontend.onrender.com" // Or use "*" for testing
 }));
 app.use(express.json());
 
