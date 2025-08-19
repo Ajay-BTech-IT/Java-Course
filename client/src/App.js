@@ -67,7 +67,7 @@ function App() {
     setSuccess(false);
 
     try {
-      const response = await fetch('https://java-course.onrender.com/enroll ', {
+      const response = await fetch('https://java-course.onrender.com/enroll', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
