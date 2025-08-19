@@ -24,37 +24,43 @@ function App() {
   const [timerEnded, setTimerEnded] = useState(false);
 
   function calculateTimeLeft() {
-    const targetDate = new Date('2025-07-07T12:00:00');
+    const targetDate = new Date('2025-08-20T12:00:00');
     const now = new Date();
     const difference = targetDate - now;
 
-    let timeLeft = {};
-
     if (difference > 0) {
-      timeLeft = {
+      return {
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
         hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
         minutes: Math.floor((difference / 1000 / 60) % 60),
         seconds: Math.floor((difference / 1000) % 60)
       };
     } else {
-      timeLeft = {
+      return {
         days: 0,
         hours: 0,
         minutes: 0,
         seconds: 0
       };
-      setTimerEnded(true); // Mark as ended
     }
-
-    return timeLeft;
   }
 
   useEffect(() => {
     if (timerEnded) return;
 
     const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+      const newTimeLeft = calculateTimeLeft();
+      setTimeLeft(newTimeLeft);
+
+      // ✅ Mark timer ended here instead of inside calculateTimeLeft
+      if (
+        newTimeLeft.days === 0 &&
+        newTimeLeft.hours === 0 &&
+        newTimeLeft.minutes === 0 &&
+        newTimeLeft.seconds === 0
+      ) {
+        setTimerEnded(true);
+      }
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -247,7 +253,7 @@ function App() {
         </div>
       )}
 
-     {/* Full Page Success Screen */}
+      {/* Full Page Success Screen */}
       {success && (
         <div className="success-fullscreen">
           <div className="success-content">
